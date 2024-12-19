@@ -5,113 +5,52 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Deep Work Mastery</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <script src="https://unpkg.com/lucide-react"></script>
 </head>
 <body class="bg-gray-100 font-sans antialiased">
-  <div id="app" class="max-w-3xl mx-auto p-6"></div>
+  <div class="max-w-3xl mx-auto p-6">
+    <h1 class="text-4xl font-bold mb-4">Deep Work Mastery</h1>
+    <p class="text-gray-600 mb-6">Master the art of focused work with interactive lessons and badges!</p>
 
-  <script>
-    // Badge Component
-    const Badge = ({ icon, title, description, earned }) => {
-      return \`
-        <div class="p-4 rounded-lg border-2 transition-all \${earned ? 'border-green-500 bg-green-50' : 'border-gray-200 bg-gray-50 opacity-50'}">
-          <div class="flex items-center gap-3 mb-2">
-            <svg class="w-6 h-6 \${earned ? 'text-green-500' : 'text-gray-400'}">${icon}</svg>
-            <h3 class="font-semibold">\${title}</h3>
-          </div>
-          <p class="text-sm text-gray-600">\${description}</p>
+    <!-- Progress Bar -->
+    <div class="w-full bg-gray-200 rounded-full h-2 mb-6">
+      <div class="bg-green-500 h-2 rounded-full" style="width: 50%;"></div>
+    </div>
+
+    <!-- Badge Section -->
+    <div class="grid grid-cols-3 gap-4 mb-8">
+      <!-- Badge 1 -->
+      <div class="p-4 rounded-lg border-2 border-green-500 bg-green-50">
+        <div class="flex items-center gap-3 mb-2">
+          <span class="text-green-500 text-2xl">🏆</span>
+          <h3 class="font-semibold">Deep Work Initiate</h3>
         </div>
-      \`;
-    };
-
-    // Quiz Component
-    const Quiz = ({ questions, onComplete }) => {
-      let selectedAnswer = null;
-      let isCorrect = false;
-
-      const handleAnswer = (index) => {
-        selectedAnswer = index;
-        isCorrect = index === questions.correctIndex;
-        document.getElementById("quiz-feedback").innerHTML = isCorrect 
-          ? '<p class="text-green-700">✨ Great job!</p>'
-          : '<p class="text-red-700">🤔 Try again!</p>';
-        if (isCorrect) {
-          setTimeout(() => onComplete(), 1000);
-        }
-      };
-
-      return \`
-        <div class="mt-6 space-y-4">
-          <h4 class="font-semibold">Quick Check:</h4>
-          <div class="space-y-2">
-            \${questions.options.map((option, index) => \`
-              <button 
-                onclick="(${handleAnswer})(${index})"
-                class="w-full p-4 text-left rounded-lg border transition-all hover:bg-gray-50">
-                <div class="flex items-center gap-3">
-                  <span>\${option}</span>
-                </div>
-              </button>
-            \`).join('')}
-          </div>
-          <div id="quiz-feedback" class="p-4 rounded-lg"></div>
+        <p class="text-sm text-gray-600">Complete your first lesson</p>
+      </div>
+      <!-- Badge 2 -->
+      <div class="p-4 rounded-lg border-2 border-gray-200 bg-gray-50 opacity-50">
+        <div class="flex items-center gap-3 mb-2">
+          <span class="text-gray-400 text-2xl">🕒</span>
+          <h3 class="font-semibold">Strategy Master</h3>
         </div>
-      \`;
-    };
+        <p class="text-sm text-gray-600">Learn all four deep work strategies</p>
+      </div>
+    </div>
 
-    // Main App
-    const renderApp = () => {
-      const lessons = [
-        { id: 1, title: "Lesson 1", content: "Lesson 1 Content", quiz: { options: ["Option 1", "Option 2"], correctIndex: 0 } },
-        { id: 2, title: "Lesson 2", content: "Lesson 2 Content", quiz: { options: ["Option A", "Option B"], correctIndex: 1 } },
-      ];
-
-      const badges = [
-        { icon: '🏆', title: "Deep Work Initiate", description: "Complete your first lesson", earned: false },
-        { icon: '🕒', title: "Strategy Master", description: "Learn all four deep work strategies", earned: false },
-      ];
-
-      let completedLessons = JSON.parse(localStorage.getItem('completedLessons')) || [];
-      const progress = (completedLessons.length / lessons.length) * 100;
-
-      // Render Lessons
-      const lessonElements = lessons.map((lesson, index) => {
-        const isCompleted = completedLessons.includes(lesson.id);
-        return \`
-          <div class="p-4 rounded-lg border mb-4 \${isCompleted ? 'border-green-500' : 'border-gray-200'}">
-            <h3 class="font-semibold">\${lesson.title}</h3>
-            <p>\${lesson.content}</p>
-            \${!isCompleted ? '<button onclick="completeLesson(\${lesson.id})" class="bg-green-500 text-white px-4 py-2 rounded">Complete</button>' : '<span class="text-green-700">Completed</span>'}
-          </div>
-        \`;
-      }).join('');
-
-      // Render Badges
-      const badgeElements = badges.map((badge, index) => Badge({ ...badge, earned: completedLessons.length > index })).join('');
-
-      // App Template
-      document.getElementById('app').innerHTML = \`
-        <div>
-          <h1 class="text-4xl font-bold mb-4">Deep Work Mastery</h1>
-          <p class="text-gray-600 mb-6">Master the art of focused work</p>
-          <div class="w-full bg-gray-200 rounded-full h-2 mb-6">
-            <div class="bg-green-500 h-2 rounded-full" style="width: \${progress}%"></div>
-          </div>
-          <div class="grid grid-cols-3 gap-4 mb-8">\${badgeElements}</div>
-          <div>\${lessonElements}</div>
-        </div>
-      \`;
-
-      // Save Progress
-      window.completeLesson = (lessonId) => {
-        completedLessons.push(lessonId);
-        localStorage.setItem('completedLessons', JSON.stringify(completedLessons));
-        renderApp();
-      };
-    };
-
-    // Initialize App
-    renderApp();
-  </script>
+    <!-- Lessons Section -->
+    <div>
+      <!-- Lesson 1 -->
+      <div class="p-4 rounded-lg border border-gray-200 mb-4">
+        <h3 class="font-semibold text-lg">Lesson 1: The Importance of Deep Work</h3>
+        <p class="text-gray-700 mt-2">Deep work is the ability to focus without distraction on cognitively demanding tasks. Mastering this skill is key to success in a distracted world.</p>
+        <button class="mt-4 bg-green-500 text-white px-4 py-2 rounded">Mark as Complete</button>
+      </div>
+      <!-- Lesson 2 -->
+      <div class="p-4 rounded-lg border border-gray-200 mb-4">
+        <h3 class="font-semibold text-lg">Lesson 2: Strategies for Deep Work</h3>
+        <p class="text-gray-700 mt-2">Learn four key strategies: Monastic, Bimodal, Rhythmic, and Journalistic, to integrate deep work into your life effectively.</p>
+        <button class="mt-4 bg-green-500 text-white px-4 py-2 rounded">Mark as Complete</button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
