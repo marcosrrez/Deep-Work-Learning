@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deep Work Mastery</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(45deg, #58CC02, #28A100);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: #e5e5e5;
+            border-radius: 4px;
+            margin: 2rem 0;
+            overflow: hidden;
+        }
+
+        .progress {
+            width: 0%;
+            height: 100%;
+            background-color: #58CC02;
+            transition: width 0.5s ease-in-out;
+        }
+
+        .lesson-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .lesson-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .lesson-card.locked {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .lesson-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .lesson-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .xp {
+            background: #58CC02;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .streak-container {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .streak-count {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #58CC02;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .achievement {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            display: none;
+            animation: pulse 2s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Deep Work Mastery</h1>
+            <p>Master the art of focused work through daily practice</p>
+        </div>
+
+        <div class="streak-container">
+            <div class="streak-count">0</div>
+            <div>Days Streak</div>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress" id="progress"></div>
+        </div>
+
+        <div class="lessons">
+            <div class="lesson-card" onclick="completeLesson(0)">
+                <div class="lesson-header">
+                    <div class="lesson-title">The Deep Work Philosophy</div>
+                    <div class="xp">20 XP</div>
+                </div>
+                <p>Learn why deep work is crucial in our distracted world</p>
+            </div>
+
+            <div class="lesson-card locked" id="lesson2">
+                <div class="lesson-header">
+                    <div class="lesson-title">The Four Rules of Deep Work</div>
+                    <div class="xp">30 XP</div>
+                </div>
+                <p>Master the fundamental rules for achieving depth</p>
+            </div>
+
+            <div class="lesson-card locked" id="lesson3">
+                <div class="lesson-header">
+                    <div class="lesson-title">Building Deep Work Habits</div>
+                    <div class="xp">40 XP</div>
+                </div>
+                <p>Create sustainable routines for focused work</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="achievement" id="achievement">
+        🎯 Achievement Unlocked: Focus Master!
+    </div>
+
+    <script>
+        let progress = 0;
+        let streak = 0;
+        let lessonsCompleted = 0;
+
+        function completeLesson(lessonIndex) {
+            if (document.querySelectorAll('.lesson-card')[lessonIndex].classList.contains('locked')) {
+                return;
+            }
+
+            progress += 33.33;
+            lessonsCompleted++;
+            streak++;
+            
+            document.querySelector('.streak-count').textContent = streak;
+            document.querySelector('#progress').style.width = `${progress}%`;
+
+            if (lessonsCompleted === 1) {
+                document.getElementById('lesson2').classList.remove('locked');
+            } else if (lessonsCompleted === 2) {
+                document.getElementById('lesson3').classList.remove('locked');
+            }
+
+            showAchievement();
+            
+            document.querySelectorAll('.lesson-card')[lessonIndex].style.opacity = '0.7';
+            document.querySelectorAll('.lesson-card')[lessonIndex].style.cursor = 'default';
+        }
+
+        function showAchievement() {
+            const achievement = document.getElementById('achievement');
+            achievement.style.display = 'block';
+            setTimeout(() => {
+                achievement.style.display = 'none';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
